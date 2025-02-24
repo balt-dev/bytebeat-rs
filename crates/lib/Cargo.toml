@@ -2,6 +2,8 @@
 name = "bytebeat-rs"
 version = "0.1.0"
 edition = "2024"
+description = "Library crate for bytebeat binary"
+license = "MIT"
 
 [dependencies]
 stacker = "0.1"

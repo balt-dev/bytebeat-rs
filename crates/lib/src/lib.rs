@@ -1,5 +1,3 @@
-use std::cell::LazyCell;
-
 use inkwell::{builder::BuilderError, context::Context as Ctx, OptimizationLevel};
 use ir::CompilationError;
 use jit::TimeFunc;
