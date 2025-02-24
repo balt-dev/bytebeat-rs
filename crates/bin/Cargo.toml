@@ -1,6 +1,6 @@
 [package]
 name = "bytebeat-cli"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 description = "An LLVM-powered program to JIT-compile bytebeats and play them through your speaker."
 license = "MIT"
