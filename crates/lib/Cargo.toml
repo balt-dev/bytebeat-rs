@@ -1,6 +1,6 @@
 [package]
 name = "bytebeat-rs"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 description = "Library crate for bytebeat binary"
 license = "MIT"

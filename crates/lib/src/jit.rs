@@ -26,13 +26,13 @@ pub fn jit<'ctx, 'arr>(ctx: &'ctx Context, arr: Vec<Instruction>, opt: Optimizat
     let i32 = ctx.i32_type();
     let f32 = ctx.f32_type();
     let f64 = ctx.f64_type();
-    let func = i8.fn_type(&[i32.into()], false);
+    let func = i8.fn_type(&[f64.into()], false);
     let module = ctx.create_module("bytebeat");
     let engine = module.create_jit_execution_engine(opt)
         .expect("failed to create JIT execution engine");
     let function = module.add_function("beat", func, None);
     let block = ctx.append_basic_block(function, "entry");
-    let t = function.get_nth_param(0).expect("function should have 1 parameter").into_int_value();
+    let t = function.get_nth_param(0).expect("function should have 1 parameter").into_float_value();
     let builder = ctx.create_builder();
 
     let explode_block = ctx.append_basic_block(function, "EXPLODE");
@@ -41,7 +41,7 @@ pub fn jit<'ctx, 'arr>(ctx: &'ctx Context, arr: Vec<Instruction>, opt: Optimizat
 
     builder.position_at_end(block);
     let mut register_map = HashMap::new();
-    register_map.insert(0, NumberValue::Int { int: t, signed: true });
+    register_map.insert(0, NumberValue::Float(t));
     let mut cg = Codegen {
         ctx,
         builder, function,
@@ -66,11 +66,11 @@ pub fn jit<'ctx, 'arr>(ctx: &'ctx Context, arr: Vec<Instruction>, opt: Optimizat
 #[derive(Clone)]
 pub struct TimeFunc<'ctx> {
     _engine: SendExecEngineInner<'ctx>,
-    fn_ptr: unsafe extern "C" fn(i32) -> u8
+    fn_ptr: unsafe extern "C" fn(f64) -> u8
 }
 
 impl<'ctx> TimeFunc<'ctx> {
-    pub unsafe fn call(&self, t: i32) -> u8 {
+    pub unsafe fn call(&self, t: f64) -> u8 {
         // SAFETY: This won't dangle until the engine is dropped, which doesn't happen unless the whole object is dropped.
         unsafe { (self.fn_ptr)(t) }
     }

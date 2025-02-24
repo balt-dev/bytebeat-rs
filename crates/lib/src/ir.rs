@@ -264,7 +264,7 @@ impl std::error::Error for CompilationError {}
 
 impl CodeGenerator {
     pub fn generate_ir(mut self, expr: Expression) -> Result<Vec<Instruction>, CompilationError> {
-        let t_register = self.make_register(Type::I32);
+        let t_register = self.make_register(Type::F64);
         let mut payload = self.gen_expr(expr, &t_register)?;
         if payload.ty() != Type::U8 {
             payload = self.convert(payload, Type::U8);
@@ -353,16 +353,9 @@ impl CodeGenerator {
                 if ty == Bin::Modulus {
                     if lhs.ty().is_float() { lhs = self.convert(lhs, Type::I32) }
                     if rhs.ty().is_float() { rhs = self.convert(rhs, Type::I32) }
-                }
-
-                if !rhs.ty().is_float() {
-                    // If !rhs, then we branch to error
-                    let reg = self.init(Value::Register(rhs.clone()));
-                    let ity = reg.ty().integer_promote();
-                    let oreg = if reg.ty() != ity { self.convert(reg, ity) } else { reg };
-                    let rreg = self.make_register(Type::U1);
-                    self.instructions.push(Instruction::Unary { output: rreg.clone(), ty: UnaryOperandType::Not, payload: oreg });
-                    self.instructions.push(Instruction::Deny { cond: rreg });
+                } else {
+                    if !lhs.ty().is_float() { lhs = self.convert(lhs, Type::F64) }
+                    if !rhs.ty().is_float() { rhs = self.convert(rhs, Type::F64) }
                 }
 
                 let pty = lhs.ty().integer_promote().max(rhs.ty().integer_promote());

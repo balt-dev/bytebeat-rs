@@ -1,6 +1,6 @@
 [package]
 name = "bytebeat-cli"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2024"
 description = "An LLVM-powered program to JIT-compile bytebeats and play them through your speaker."
 license = "MIT"
@@ -9,5 +9,5 @@ repository = "https://github.com/balt-dev/bytebeat-rs"
 [dependencies]
 cpal = "0.15"
 clap = {version = "4", features = ["derive"]}
-bytebeat-rs = {version = "0.1", path = "../lib"}
+bytebeat-rs = {version = "0.2", path = "../lib"}
 ctrlc = "3"

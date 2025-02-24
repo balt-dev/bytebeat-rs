@@ -83,7 +83,7 @@ fn main_() -> Result<(), Box<dyn Error>> {
         &conf.config(),
         move |data: &mut [u8], _| {
             for sample in data {
-                *sample = unsafe { func.call((t as f64 * dilation) as i32) };
+                *sample = unsafe { func.call((t as f64 * dilation).trunc()) };
                 t = t.wrapping_add(1);
             }
         }, 
