@@ -40,8 +40,7 @@ macro_rules! zst_error {
 
 zst_error! {
     NoDevice => "no devices found",
-    NoSupportedStream => "no devices found that support unsigned 8-bit audio data",
-    InvalidSampleRate => "device does not support specified sample rate"
+    NoSupportedStream => "no devices found that support unsigned 8-bit audio data"
 }
 
 static RUNNING: AtomicBool = AtomicBool::new(true);
@@ -66,13 +65,15 @@ fn main_() -> Result<(), Box<dyn Error>> {
         if config.sample_format() == SampleFormat::U8 { conf = Some(config); break; }
     }
     let conf_range = conf.ok_or(NoSupportedStream)?;
-    let conf = conf_range.try_with_sample_rate(SampleRate(args.sample_rate)).ok_or(InvalidSampleRate)?;
+    let conf = conf_range.with_max_sample_rate();
+    let sample_rate = conf.sample_rate().0;
+    let dilation = args.sample_rate as f64 / sample_rate as f64;
 
     // This should exist for the rest of the program
     let ctx = Box::leak(Box::new(Context::create()));
     let func = bytebeat_rs::compile(ctx, &beat)?;
 
-    let mut t = 0;
+    let mut t = 0i32;
 
     ctrlc::set_handler(move || {
         RUNNING.store(false, Ordering::SeqCst);
@@ -82,7 +83,7 @@ fn main_() -> Result<(), Box<dyn Error>> {
         &conf.config(),
         move |data: &mut [u8], _| {
             for sample in data {
-                *sample = unsafe { func.call(t) };
+                *sample = unsafe { func.call((t as f64 * dilation) as i32) };
                 t = t.wrapping_add(1);
             }
         }, 
