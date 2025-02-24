@@ -3,7 +3,7 @@ use std::{error::Error, io::{stdin, Read}, process::ExitCode, sync::atomic::{Ato
 
 use bytebeat_rs::Context;
 use clap::Parser;
-use cpal::{traits::{DeviceTrait, HostTrait as _, StreamTrait}, SampleFormat, SampleRate, StreamConfig, SupportedBufferSize};
+use cpal::{traits::{DeviceTrait, HostTrait as _, StreamTrait}, SampleFormat, SampleRate};
 
 /// Program to play bytebeats over the speaker
 #[derive(Parser, Debug)]
@@ -16,18 +16,6 @@ struct Args {
     #[arg(required = false)]
     /// Beat to play - if not supplied, will take from stdin
     beat: Option<String>,
-}
-
-macro_rules! funwrap {
-    ($expr: expr) => {
-        match ($expr) {
-            Ok(v) => v,
-            Err(err) => {
-                eprintln!("{err}");
-                return ExitCode::FAILURE;
-            }
-        }
-    };
 }
 
 fn main() -> ExitCode {
