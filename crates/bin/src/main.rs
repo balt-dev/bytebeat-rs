@@ -3,7 +3,7 @@ use std::{error::Error, io::{stdin, Read}, process::ExitCode, sync::atomic::{Ato
 
 use bytebeat_rs::Context;
 use clap::Parser;
-use cpal::{traits::{DeviceTrait, HostTrait as _, StreamTrait}, SampleFormat, SampleRate};
+use cpal::{traits::{DeviceTrait, HostTrait as _, StreamTrait}, SampleFormat};
 
 /// Program to play bytebeats over the speaker
 #[derive(Parser, Debug)]
