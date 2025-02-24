@@ -4,6 +4,7 @@ version = "0.1.2"
 edition = "2024"
 description = "An LLVM-powered program to JIT-compile bytebeats and play them through your speaker."
 license = "MIT"
+repository = "https://github.com/balt-dev/bytebeat-rs"
 
 [dependencies]
 cpal = "0.15"

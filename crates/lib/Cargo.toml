@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "Library crate for bytebeat binary"
 license = "MIT"
+repository = "https://github.com/balt-dev/bytebeat-rs"
 
 [dependencies]
 stacker = "0.1"
